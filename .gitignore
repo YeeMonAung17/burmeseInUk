@@ -76,3 +76,7 @@ yarn-error.log
 
 # Project specific
 SHOUT/
+.SHOUT/
+.github
+.env
+.env.production
