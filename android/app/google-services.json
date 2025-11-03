@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87889630953",
+    "project_id": "burmeseinuk",
+    "storage_bucket": "burmeseinuk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87889630953:android:e9833100a8aa6ac6958278",
+        "android_client_info": {
+          "package_name": "com.burmeseinuk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxa1znogQkxS9qT7OLrlor7C1zYzHsSI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

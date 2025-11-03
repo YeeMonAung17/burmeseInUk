@@ -1,22 +1,19 @@
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { NavigationContainer } from '@react-navigation/native'
+import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import 'react-native-reanimated'
+import { RootNavigation } from './src/navigation/rootNavigation'
+import { globalStyle } from './src/utils/master/globalStyles'
 
 export const App = () => {
-  const isDarkMode = useColorScheme() === 'dark'
-
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {/* to delete */}
-      <Text>BURMESE IN UK</Text>
-    </View>
+    <GestureHandlerRootView style={globalStyle.flex}>
+      <BottomSheetModalProvider>
+        <NavigationContainer>
+          <RootNavigation />
+        </NavigationContainer>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // to delete
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})

@@ -8,6 +8,9 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
+# Required for Firebase Swift pods
+use_frameworks! :linkage => :static
+
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
@@ -15,6 +18,7 @@ if linkage != nil
 end
 
 target 'burmeseInUk' do
+  
   config = use_native_modules!
 
   use_react_native!(
@@ -22,6 +26,19 @@ target 'burmeseInUk' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  # Firebase pods
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  
+  # Enable modular headers for Firebase and its dependencies (required for Swift pods)
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseAuth', :modular_headers => true
+  pod 'FirebaseAuthInterop', :modular_headers => true
+  pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'RecaptchaInterop', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
@@ -31,5 +48,21 @@ target 'burmeseInUk' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    
+    # Fix for Firebase Swift header generation
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Enable Swift compilation for Firebase pods
+        if target.name == 'FirebaseAuth'
+          config.build_settings['SWIFT_VERSION'] = '5.9'
+          config.build_settings['SWIFT_COMPILATION_MODE'] = 'wholemodule'
+          config.build_settings['DEFINES_MODULE'] = 'YES'
+        end
+        
+        # Fix for Xcode 16 module compatibility
+        config.build_settings['OTHER_CPLUSPLUSFLAGS'] ||= ['$(OTHER_CFLAGS)']
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
   end
 end

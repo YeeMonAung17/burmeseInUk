@@ -1,0 +1,27 @@
+{
+  "React Native Component with Memo": {
+    "prefix": "tsx",
+    "body": [
+      "import { memo } from 'react'",
+      "import { StyleSheet, Text, View } from 'react-native'",
+      "",
+      "const ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Init = (): React.ReactNode => {",
+      "  return (",
+      "    <View style={styles.container}>",
+      "      <Text>${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}</Text>",
+      "    </View>",
+      "  )",
+      "}",
+      "",
+      "export const ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} = memo(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}Init)",
+      "",
+      "const styles = StyleSheet.create({",
+      "  container: {",
+      "    flex: 1,",
+      "  },",
+      "})",
+      ""
+    ],
+    "description": "Create a memoized React Native component with StyleSheet"
+  }
+}
