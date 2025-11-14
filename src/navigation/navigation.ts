@@ -13,8 +13,18 @@ export enum Screen {
   VISA = 'Visa',
   STUDENT = 'Student',
   CHAT = 'Chat',
+  CHAT_LIST = 'ChatList',
   PROFILE = 'Profile',
   EDIT_PROFILE = 'EditProfile',
+
+  //Photo Gallery
+  PHOTO_GALLERY = 'PhotoGallery',
+
+  //Home Screens
+  GROCERY = 'Grocery',
+
+  //Job
+  JOBS = 'Jobs',
 
   //Utils
   URL_VIEW = 'Url view',
@@ -32,9 +42,18 @@ export type AppNavigationParams = {
   [Screen.HOME]: undefined
   [Screen.VISA]: undefined
   [Screen.STUDENT]: undefined
-  [Screen.CHAT]: undefined
+  [Screen.CHAT]: { contactId: string; contactName: string }
+  [Screen.CHAT_LIST]: undefined
+
   [Screen.PROFILE]: undefined
   [Screen.EDIT_PROFILE]: undefined
+
+  //Photo Gallery
+  [Screen.PHOTO_GALLERY]: undefined
+
+  //Home Screens
+  [Screen.GROCERY]: undefined
+  [Screen.JOBS]: undefined
 
   //Utils
   [Screen.URL_VIEW]: { url: string }

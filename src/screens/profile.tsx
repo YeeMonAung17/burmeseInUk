@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import {
   Image,
   SafeAreaView,
@@ -13,6 +13,8 @@ import {
 } from 'react-native'
 import { useAppNavigation } from '../navigation/hooks/useNavigation'
 import { Screen } from '../navigation/navigation'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { toggleDarkMode } from '../store/slices/themeSlice'
 import { FeatherIcon } from '../utils/icons/fontawesome'
 
 const ProfileInit = (): React.ReactNode => {
@@ -41,40 +43,19 @@ const ProfileInit = (): React.ReactNode => {
     }, []),
   )
   const [form, setForm] = useState({
-    darkMode: false,
     emailNotifications: true,
     pushNotifications: false,
     language: 'en',
   })
-
-  // 🔹 Load preferences on start
-  useEffect(() => {
-    const loadPreferences = async () => {
-      try {
-        const saved = await AsyncStorage.getItem('darkMode')
-        if (saved !== null) {
-          setForm(f => ({ ...f, darkMode: saved === 'true' }))
-        }
-      } catch (error) {
-        console.error('Error loading preferences:', error)
-      }
-    }
-    loadPreferences()
-  }, [])
-
-  // 🔹 Save darkMode whenever it changes
-  useEffect(() => {
-    AsyncStorage.setItem('darkMode', String(form.darkMode)).catch(e =>
-      console.log('failed to save darkMode', e),
-    )
-  }, [form.darkMode])
+  const darkMode = useAppSelector(state => state.theme.darkMode)
+  const dispatch = useAppDispatch()
 
   const editProfile = () => {
-    navigation.navigate(Screen.EDITPROFILE)
+    navigation.navigate(Screen.EDIT_PROFILE)
   }
 
   // 🎨 Dark mode colors
-  const isDark = form.darkMode
+  const isDark = darkMode
   const bgColor = isDark ? '#000000' : '#ffffff'
   const sectionBg = isDark ? '#121212' : '#f8f8f8'
   const rowBg = isDark ? '#1c1c1e' : '#f2f2f2'
@@ -147,8 +128,10 @@ const ProfileInit = (): React.ReactNode => {
             </Text>
             <View style={styles.rowSpacer} />
             <Switch
-              value={form.darkMode}
-              onValueChange={darkMode => setForm({ ...form, darkMode })}
+              value={darkMode}
+              onValueChange={() => {
+                dispatch(toggleDarkMode())
+              }}
             />
           </View>
 

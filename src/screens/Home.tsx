@@ -1,20 +1,18 @@
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { memo } from 'react'
-import {
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { RefreshControl, StyleSheet, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { homeData, HomeItem } from '../data/homeData'
+import { GridTile } from '../gridTile'
 import { useRefresh } from '../hooks/useRefresh'
+import { useTheme } from '../hooks/useTheme'
 import { AppNavigationParams } from '../navigation/navigation'
-import { FontAwesome } from '../utils/icons/fontawesome'
+import { News } from './home/News'
 
-const HomeInit = (): JSX.Element => {
+const HomeInit = (): React.ReactNode => {
+  const { colors } = useTheme()
+  const { background } = colors
   const navigation =
     useNavigation<NativeStackNavigationProp<AppNavigationParams>>()
 
@@ -24,26 +22,31 @@ const HomeInit = (): JSX.Element => {
     console.log('✅ Home screen refreshed!')
   })
 
-  const renderItem = ({ item }: { item: HomeItem }) => (
-    <TouchableOpacity
-      style={styles.tile}
-      onPress={() => {
-        console.log('Navigating to:', item.screen)
-      }}>
-      <FontAwesome icon={item.icon} size={32} color={item.color} />
+  const renderItem = ({ item }: { item: HomeItem }) => {
+    const { icon, title, color, screen } = item
 
-      <Text style={styles.title}>{item.title}</Text>
-    </TouchableOpacity>
-  )
+    return (
+      <GridTile
+        icon={icon}
+        title={title}
+        color={color}
+        onPress={() => {
+          console.log('Navigating to:', screen)
+          navigation.navigate(screen as any)
+        }}
+      />
+    )
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: background }]}>
       <FlatList
         data={homeData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={styles.listContent}
+        ListHeaderComponent={<News topic="UK" title="📰 Latest UK News" />}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -62,27 +65,9 @@ export const Home = memo(HomeInit)
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    backgroundColor: '#fff',
   },
   listContent: {
     paddingHorizontal: 8,
     paddingVertical: 10,
-  },
-  tile: {
-    flex: 1,
-    margin: 12,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    height: 140,
-    gap: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 })

@@ -1,20 +1,16 @@
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { memo } from 'react'
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { studentData, StudentItem } from '../data/studentPageData'
+import { GridTile } from '../gridTile'
 import { useRefresh } from '../hooks/useRefresh'
+import { useTheme } from '../hooks/useTheme'
 import { StudentStackParams } from '../navigation/StudentNavigator'
-import { FontAwesome } from '../utils/icons/fontawesome'
+import { News } from './home/News'
 
 const StudentInit = (): React.ReactNode => {
+  const { colors } = useTheme()
   const navigation =
     useNavigation<NativeStackNavigationProp<StudentStackParams>>()
 
@@ -24,26 +20,33 @@ const StudentInit = (): React.ReactNode => {
     console.log('✅ Student screen refreshed!')
   })
 
-  const renderItem = ({ item }: { item: StudentItem }) => (
-    <TouchableOpacity
-      style={styles.tile}
-      onPress={() => {
-        console.log('Navigating to:', item.screen)
-        navigation.navigate(item.screen as keyof StudentStackParams)
-      }}>
-      <FontAwesome icon={item.icon} size={32} color={item.color} />
-      <Text style={styles.title}>{item.title}</Text>
-    </TouchableOpacity>
-  )
+  const renderItem = ({ item }: { item: StudentItem }) => {
+    const { icon, title, color, screen } = item
+
+    return (
+      <GridTile
+        icon={icon}
+        title={title}
+        color={color}
+        onPress={() => {
+          console.log('Navigating to:', screen)
+          navigation.navigate(screen as keyof StudentStackParams)
+        }}
+      />
+    )
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={studentData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          <News topic="UK student university" title="� Student News" />
+        }
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -62,27 +65,9 @@ export const Student = memo(StudentInit)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   listContent: {
     paddingHorizontal: 8,
     paddingVertical: 10,
-  },
-  tile: {
-    flex: 1,
-    margin: 12,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    height: 140,
-    gap: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 })

@@ -1,4 +1,5 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 import { useState } from 'react'
 
 interface UseSignupResult {
@@ -28,6 +29,24 @@ export const useSignup = (): UseSignupResult => {
 
       console.log('✅ Signup successful! User ID:', userCredential.user.uid)
       console.log('📧 User email:', userCredential.user.email)
+
+      // Add user to Firestore 'users' collection
+      if (userCredential.user) {
+        await firestore()
+          .collection('users')
+          .doc(userCredential.user.uid)
+          .set(
+            {
+              id: userCredential.user.uid,
+              email: userCredential.user.email,
+              displayName:
+                userCredential.user.displayName || userCredential.user.email,
+              avatar: '',
+              createdAt: Date.now(),
+            },
+            { merge: true },
+          )
+      }
 
       // Optionally send email verification
       if (userCredential.user && !userCredential.user.emailVerified) {

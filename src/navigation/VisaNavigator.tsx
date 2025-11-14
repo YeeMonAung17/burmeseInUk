@@ -45,8 +45,7 @@ export const VisaNavigator = () => {
         name="VisaHome"
         component={Visa}
         options={{
-          headerShown: false,
-          title: '',
+          title: 'Visa',
         }}
       />
       <VisaStack.Screen
