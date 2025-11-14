@@ -3,12 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Chat } from '../screens/chat'
-import { Home } from '../screens/Home'
+import { ChatList } from '../screens/chatlist'
+import { Grocery } from '../screens/home/Grocery'
+import { Jobs } from '../screens/home/Jobs'
 import { Login } from '../screens/login'
+import { PhotoGallery } from '../screens/PhotoGallery'
 import { Profile } from '../screens/profile'
 import { Student } from '../screens/student'
 import { EditProfile } from '../screens/utils/Editprofile'
-import { HeaderProfileButton } from '../screens/utils/HeaderProfileButton'
 import { Signup } from '../screens/utils/Signup'
 import { UrlView } from '../screens/utils/urlView'
 import { Welcome } from '../screens/utils/Welcome'
@@ -24,6 +26,7 @@ import { colors } from '../utils/master/colors'
 import { SPACE } from '../utils/master/constants'
 import { globalStyle } from '../utils/master/globalStyles'
 import { getSize } from '../utils/master/globalUtilityFunctionsAndConstants'
+import { HomeNavigator } from './HomeNavigator'
 import { AppNavigationParams, Screen, TabParams, TabRoute } from './navigation'
 import { StudentNavigator } from './StudentNavigator'
 import { VisaNavigator } from './VisaNavigator'
@@ -96,24 +99,12 @@ export const TabsNavigation = () => {
         />
         <AppTabs.Screen
           name={TabRoute.HOME_TAB}
-          component={Home}
+          component={HomeNavigator}
           listeners={{
             tabPress: () => {},
           }}
           options={{
-            headerShown: true,
-            headerTitle: 'Home',
-            headerRight: () => <HeaderProfileButton />,
-            headerRightContainerStyle: { paddingRight: 24, marginRight: 8 },
-            headerStyle: {
-              backgroundColor: colors.offBlack,
-            },
-            headerTintColor: colors.white,
-            headerTitleStyle: {
-              fontWeight: '600',
-              fontSize: 18,
-              color: colors.white,
-            },
+            headerShown: false,
             tabBarIcon: ({ color }: { color: string }) => (
               <FontAwesome icon={fasHouse} color={color} size={getSize(24)} />
             ),
@@ -144,7 +135,7 @@ export const TabsNavigation = () => {
         />
         <AppTabs.Screen
           name={TabRoute.CHAT_TAB}
-          component={Chat}
+          component={ChatList}
           listeners={{
             tabPress: () => {},
           }}
@@ -177,6 +168,7 @@ export const RootNavigation = () => {
         gestureEnabled: false,
         animation: 'fade',
         orientation: 'portrait',
+        headerBackTitle: '', // Global setting for all screens - just show arrow
       }}>
       {/* Welcome */}
       <AppStack.Screen name={Screen.WELCOME} component={Welcome} />
@@ -190,12 +182,51 @@ export const RootNavigation = () => {
       <AppStack.Screen name={Screen.HOME} component={TabsNavigation} />
 
       <AppStack.Screen name={Screen.STUDENT} component={Student} />
+      <AppStack.Screen name={Screen.CHAT_LIST} component={ChatList} />
       <AppStack.Screen name={Screen.CHAT} component={Chat} />
       <AppStack.Screen name={Screen.PROFILE} component={Profile} />
       <AppStack.Screen name={Screen.EDIT_PROFILE} component={EditProfile} />
 
+      {/* Photo Gallery */}
+      <AppStack.Screen name={Screen.PHOTO_GALLERY} component={PhotoGallery} />
+
+      {/* Home Screens */}
+      <AppStack.Screen
+        name={Screen.GROCERY}
+        component={Grocery}
+        options={{
+          header: undefined,
+          headerShown: true,
+          headerTitle: 'Grocery Stores',
+          headerStyle: { backgroundColor: colors.offBlack },
+          headerTintColor: colors.white,
+          headerTitleStyle: { fontWeight: '600', fontSize: 18 },
+          headerBackTitle: '',
+          gestureEnabled: true,
+        }}
+      />
+
+      <AppStack.Screen
+        name={Screen.JOBS}
+        component={Jobs}
+        options={{ title: 'Job List' }}
+      />
+
       {/* Utils */}
-      <AppStack.Screen name={Screen.URL_VIEW} component={UrlView} />
+      <AppStack.Screen
+        name={Screen.URL_VIEW}
+        component={UrlView}
+        options={{
+          header: undefined,
+          headerShown: true,
+          headerTitle: 'Website',
+          headerStyle: { backgroundColor: colors.offBlack },
+          headerTintColor: colors.white,
+          headerTitleStyle: { fontWeight: '600', fontSize: 18 },
+          headerBackTitle: '', // Just show arrow, no text
+          gestureEnabled: true,
+        }}
+      />
     </AppStack.Navigator>
   )
 }

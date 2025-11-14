@@ -3,6 +3,7 @@ import {
   faBriefcase,
   faBuildingColumns,
   faBus,
+  faCamera,
   faCartShopping,
   faHouse,
   faHouseMedical,
@@ -35,7 +36,7 @@ export const homeData: HomeItem[] = [
   {
     id: '3',
     title: 'Money Transfer',
-    screen: 'TransferScreen',
+    screen: 'MoneyTransferScreen',
     icon: faMoneyBillTransfer,
     color: '#FF9800',
   },
@@ -66,5 +67,12 @@ export const homeData: HomeItem[] = [
     screen: 'GroceryScreen',
     icon: faCartShopping,
     color: '#4CAF50',
+  },
+  {
+    id: '8',
+    title: 'Photo Gallery',
+    screen: 'PhotoGalleryScreen',
+    icon: faCamera,
+    color: '#E91E63',
   },
 ]
